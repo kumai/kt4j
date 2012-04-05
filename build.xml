@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="kt4j" default="help" basedir=".">
+
+  <property name="version" value="0.7.0"/>
+
+  <property name="src.java.dir" value="src/java"/>
+  <property name="src.test.dir" value="src/test"/>
+  <property name="classes.dir" value="classes"/>
+  <property name="lib.dir" value="lib"/>
+  <property name="dist.dir" value="dist"/>
+
+  <path id="classpath.lib">
+    <fileset dir="${lib.dir}">
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="help">
+    <echo>compile - Compile sources.</echo>
+    <echo>test - Run unit tests.</echo>
+    <echo>clean - Clean up build files.</echo>
+    <echo>dist - Create distribution files.</echo>
+    <echo>help - Print this.</echo>
+  </target>
+  
+  <target name="compile">
+    <mkdir dir="${classes.dir}"/>
+    <javac srcdir="${src.java.dir}" destdir="${classes.dir}" debug="true" source="1.6" target="1.6" encoding="UTF-8">
+      <classpath refid="classpath.lib"/>
+    </javac>
+  </target>
+  
+  <target name="test" depends="compile">
+    <junit printsummary="yes" >
+      <classpath refid="classpath.lib"/>
+      <classpath>
+        <pathelement location="${classes.dir}"/>
+      </classpath>
+      <batchtest fork="yes">
+        <fileset dir="${src.test.dir}">
+          <include name="**/*Test*.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+  
+  <target name="clean">
+    <delete dir="${classes.dir}"/>
+    <delete dir="${dist.dir}"/>
+  </target>
+  
+  <target name="jar" depends="clean,test">
+    <mkdir dir="${dist.dir}"/>
+    <jar destfile="${dist.dir}/${ant.project.name}-${version}.jar" basedir="${classes.dir}"></jar>
+  </target>
+
+  <target name="javadoc">
+    <mkdir dir="${dist.dir}/docs"/>
+    <javadoc sourcepath="${src.java.dir}" classpathref="classpath.lib" destdir="${dist.dir}/docs"
+        windowtitle="KT4j API" locale="en_US">
+      <link href="http://docs.oracle.com/javase/7/docs/api/" packagelistloc="java"/>
+      <link href="http://netty.io/docs/stable/api/" packagelistloc="org.jboss.netty"/>
+    </javadoc>
+  </target>
+
+  <target name="dist" depends="jar,javadoc">
+    <jar destfile="${dist.dir}/${ant.project.name}-${version}-sources.jar" basedir="${src.java.dir}"></jar>
+
+    <copy todir="${dist.dir}">
+      <fileset dir="${lib.dir}">
+        <include name="netty*.jar"/>
+      </fileset>
+    </copy>
+    
+    <mkdir dir="${dist.dir}/src"/>
+    <copy todir="${dist.dir}/src">
+      <fileset dir="src"/>
+    </copy>
+
+    <copy todir="${dist.dir}">
+      <fileset dir=".">
+        <include name="LICENSE.txt"/>
+        <include name="build.xml"/>
+      </fileset>
+    </copy>
+  
+    <tar destfile="${ant.project.name}-${version}.tar.gz" basedir="${dist.dir}" compression="gzip"/>
+    <zip destfile="${ant.project.name}-${version}.zip" basedir="${dist.dir}"/>
+    <delete dir="${dist.dir}"/>
+  </target>
+
+</project>

@@ -1,0 +1,7 @@
+/classes
+/dist
+/.classpath
+/.project
+/.settings
+/kt4j-*gz
+/kt4j-*.zip
