@@ -1,7 +1,7 @@
 KT4J 
 =====
 
-KT4J is a Kyoto Tycoon client library for Java.
+KT4J is a [Kyoto Tycoon](http://fallabs.com/kyototycoon/) client library for Java.
 
 ## Usage
 
