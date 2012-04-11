@@ -1,9 +1,9 @@
 KT4J 
 =====
 
-KT4J is a [Kyoto Tycoon](http://fallabs.com/kyototycoon/) client library for Java.
+KT4J is a simple implementation of [Kyoto Tycoon](http://fallabs.com/kyototycoon/) client for Java.
 
-## Usage
+## Requirements
 
 The minimum requirements to run the application using KT4J are only three:
 
@@ -11,7 +11,13 @@ The minimum requirements to run the application using KT4J are only three:
 * the latest version of KT4J
 * [Netty](http://netty.io/) (netty-3.3.x.Final.jar)
 
-Add **kt4j-x.y.z.jar** and **netty-3.3.x.Final.jar** to the application's CLASSPATH, then:
+## Usage
+
+1. Add **kt4j-x.y.z.jar** and **netty-3.3.x.Final.jar** to the application's CLASSPATH.
+2. Create _kt4j.binary.KyotoTycoonBinaryClient_ and call start() of the instance in your application.
+3. Call various Kyoto Tycoon's procedures. (see _kt4j.KyotoTycoonClient_) 
+
+Example:
 
     import kt4j.binary.KyotoTycoonBinaryClient;
     
@@ -28,8 +34,6 @@ Add **kt4j-x.y.z.jar** and **netty-3.3.x.Final.jar** to the application's CLASSP
       }
     }
 
-You'll find more operations of Kyoto Tycoon in _kt4j.KyotoTycoonClient_ interface.
-
 ## Building
 
 KT4J uses [Ant](http://ant.apache.org) to build. The following Ant commands can be used to build:
@@ -40,9 +44,3 @@ KT4J uses [Ant](http://ant.apache.org) to build. The following Ant commands can 
 * ant javadoc - create javadocs
 * ant jar - build the jar
 * ant dist - create the source and binary distributions
-
-## Dependencies
-
-* [Netty](http://netty.io/) (netty-3.3.x.Final.jar)
-* [JUnit](http://www.junit.org/) (just for testing)
-
