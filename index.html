@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>KT4J by kumai</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>KT4J</h1>
+<p>Kyoto Tycoon client for Java</p>
+        <p class="view"><a href="https://github.com/kumai/kt4j">View the Project on GitHub <small>kumai/kt4j</small></a></p>
+        <ul>
+          <li><a href="https://github.com/kumai/kt4j/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/kumai/kt4j/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/kumai/kt4j">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>KT4J is a <a href="http://fallabs.com/kyototycoon/">Kyoto Tycoon</a> client library for Java.</p>
+
+<ul>
+<li>Small</li>
+<li>Thread-safe</li>
+<li>Binary Protocol support</li>
+</ul><h3>Download</h3>
+
+<ul>
+<li><a href="kt4j-0.7.0.tar.gz">kt4j-0.7.0.tar.gz</a></li>
+<li><a href="kt4j-0.7.0.zip">kt4j-0.7.0.zip</a></li>
+</ul><h3>Usage</h3>
+
+<p>It's easy to use in your application!</p>
+
+<ol>
+<li>Add <strong>kt4j-x.y.z.jar</strong> and <strong>netty-3.3.x.Final.jar</strong> to the application's CLASSPATH.</li>
+<li>Create <em><a href="http://kumai.github.com/kt4j/javadocs/kt4j/binary/KyotoTycoonBinaryClient.html">kt4j.binary.KyotoTycoonBinaryClient</a></em> and call start() of the instance in your application.</li>
+<li>Call various Kyoto Tycoon's procedures. (see <em><a href="http://kumai.github.com/kt4j/javadocs/kt4j/KyotoTycoonClient.html">kt4j.KyotoTycoonClient</a></em>) </li>
+</ol><p>ex:</p>
+
+<pre><code>import kt4j.binary.KyotoTycoonBinaryClient;
+
+public class Example {
+  public static void main(String[] args) {
+    KyotoTycoonBinaryClient client = new KyotoTycoonBinaryClient("kyoto_tycoon_host", 1978);
+    client.start();
+
+    client.set("KEY", "VALUE");
+    String v = client.get("KEY");
+    System.out.println(v);  // =&gt; "VALUE"
+
+    client.stop();
+  }
+}
+</code></pre>
+
+<h3>Requirements</h3>
+
+<p>The minimum requirements to run the application using KT4J are only three:</p>
+
+<ul>
+<li>JDK 6 or above</li>
+<li>the latest version of KT4J</li>
+<li>
+<a href="http://netty.io/">Netty</a> (netty-3.3.x.Final.jar)</li>
+</ul>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/kumai">kumai</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-30790027-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
