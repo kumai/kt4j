@@ -161,7 +161,7 @@ public interface KyotoTycoonClient {
     String get(String key) throws KyotoTycoonOperationFailedException;
     
     /**
-     * Retrieves records at onece.
+     * Retrieves records at once.
      * <p>
      * This method is the same as <code>getBulkString(keys, false).</code>
      * </p>
@@ -173,7 +173,7 @@ public interface KyotoTycoonClient {
     Map<String, String> getBulkString(List<String> keys) throws KyotoTycoonOperationFailedException;
     
     /**
-     * Retrieves records at onece.
+     * Retrieves records at once.
      * <p>
      * The <code>keys</code> and the values are encoded with UTF-8. 
      * </p>
@@ -188,7 +188,7 @@ public interface KyotoTycoonClient {
             throws KyotoTycoonOperationFailedException;
     
     /**
-     * Retrieve records at onece.
+     * Retrieve records at once.
      * 
      * @param keys the keys of the records to retrieve.
      * @return A map of retreived records. Returns empty map if no record found. The map is unmodifiable.
@@ -196,7 +196,7 @@ public interface KyotoTycoonClient {
     Map<byte[], byte[]> getBulk(List<byte[]> keys) throws KyotoTycoonOperationFailedException;
     
     /**
-     * Retrieve records at onece.
+     * Retrieve records at once.
      * 
      * @param keys
      *          the keys of the records to retrieve.
