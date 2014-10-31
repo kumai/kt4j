@@ -18,7 +18,6 @@ import kt4j.Request;
  *
  */
 class TsvRpcRequest extends Request {
-    private final TsvColumnCodec columnCodec = TsvColumnCodec.BASE_64;
     
     private static final String KEY = "key";
     private static final String VALUE = "value";
@@ -32,11 +31,19 @@ class TsvRpcRequest extends Request {
     private static final byte[] EMPTY_VALUE = new byte[0];
     
     private final Map<Object, Object> values = new HashMap<Object, Object>();
+
+    private TsvColumnCodec columnCodec;
     
     TsvRpcRequest(Command operation) {
+        this(operation, TsvColumnCodec.NONE);
+    }
+
+    TsvRpcRequest(Command operation, TsvColumnCodec codec) {
         super(operation);
+        this.columnCodec = codec;
     }
     
+
     public void setDatabaseIdentifier(String db) {
         if (db != null) {
             values.put("DB", utf8(db));
@@ -74,14 +81,14 @@ class TsvRpcRequest extends Request {
         return out.toByteArray();
     }
     
-    static TsvRpcRequest createGet(byte[] key) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.GET);
+    static TsvRpcRequest createGet(byte[] key, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.GET, codec);
         request.setRpcParam(KEY, key);
         return request;
     }
     
-    static TsvRpcRequest createGetBulk(List<byte[]> keys, boolean atomic) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.GET_BULK);
+    static TsvRpcRequest createGetBulk(List<byte[]> keys, boolean atomic, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.GET_BULK, codec);
         
         if (atomic) {
             request.setRpcParam(ATOMIC, EMPTY_VALUE);
@@ -97,8 +104,8 @@ class TsvRpcRequest extends Request {
         return request;
     }
     
-    static TsvRpcRequest createSet(byte[] key, byte[] value, ExpirationTime xt) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.SET);
+    static TsvRpcRequest createSet(byte[] key, byte[] value, ExpirationTime xt, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.SET, codec);
         request.setRpcParam(KEY, key);
         request.setRpcParam(VALUE, value);
         if (xt != null) {
@@ -107,8 +114,8 @@ class TsvRpcRequest extends Request {
         return request;
     }
     
-    static TsvRpcRequest createSetBulk(Map<?, ?> keyValuePairs, ExpirationTime xt, boolean atomic) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.SET_BULK);
+    static TsvRpcRequest createSetBulk(Map<?, ?> keyValuePairs, ExpirationTime xt, boolean atomic, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.SET_BULK, codec);
         
         if (xt != null) {
             request.setRpcParam(XT, xt.toString());
@@ -130,14 +137,14 @@ class TsvRpcRequest extends Request {
         return request;
     }
     
-    static TsvRpcRequest createRemove(byte[] key) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.REMOVE);
+    static TsvRpcRequest createRemove(byte[] key, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.REMOVE, codec);
         request.setRpcParam(KEY, key);
         return request;
     }
     
-    static TsvRpcRequest createRemoveBulk(List<byte[]> keys, boolean atomic) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.REMOVE_BULK);
+    static TsvRpcRequest createRemoveBulk(List<byte[]> keys, boolean atomic, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.REMOVE_BULK, codec);
         
         if (atomic) {
             request.setRpcParam(ATOMIC, EMPTY_VALUE);
@@ -153,8 +160,8 @@ class TsvRpcRequest extends Request {
         return request;
     }
     
-    static final TsvRpcRequest createIncrement(byte[] key, long num, long origin, ExpirationTime xt) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.INCREMENT);
+    static final TsvRpcRequest createIncrement(byte[] key, long num, long origin, ExpirationTime xt, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.INCREMENT, codec);
         request.setRpcParam(KEY, key);
         request.setRpcParam(NUM, String.valueOf(num));
         request.setRpcParam(ORIG, String.valueOf(origin));
@@ -166,8 +173,8 @@ class TsvRpcRequest extends Request {
         return request;
     }
     
-    static TsvRpcRequest createIncrementDouble(byte[] key, double num, Double origin, ExpirationTime xt) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.INCREMENT_DOUBLE);
+    static TsvRpcRequest createIncrementDouble(byte[] key, double num, Double origin, ExpirationTime xt, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.INCREMENT_DOUBLE, codec);
         request.setRpcParam(KEY, key);
         request.setRpcParam(NUM, String.valueOf(num));
         
@@ -188,8 +195,8 @@ class TsvRpcRequest extends Request {
         return request;
     }
 
-    static TsvRpcRequest createCas(byte[] key, byte[] expect, byte[] update, ExpirationTime xt) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.CAS);
+    static TsvRpcRequest createCas(byte[] key, byte[] expect, byte[] update, ExpirationTime xt, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.CAS, codec);
         request.setRpcParam(KEY, key);
         request.setRpcParam(OVAL, expect);
         request.setRpcParam(NVAL, update);
@@ -201,31 +208,19 @@ class TsvRpcRequest extends Request {
         return request;
     }
     
-    static TsvRpcRequest createClear() {
-        TsvRpcRequest request = new TsvRpcRequest(Command.CLEAR);
+    static TsvRpcRequest createClear(TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.CLEAR, codec);
         return request;
     }
     
-    static TsvRpcRequest createSeize(byte[] key) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.SEIZE);
+    static TsvRpcRequest createSeize(byte[] key, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.SEIZE, codec);
         request.setRpcParam(KEY, key);
         return request;
     }
     
-    static TsvRpcRequest createReplace(byte[] key, byte[] value, ExpirationTime xt) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.REPLACE);
-        request.setRpcParam(KEY, key);
-        request.setRpcParam(VALUE, value);
-        
-        if (xt != null) {
-            request.setRpcParam(XT, xt.toString());
-        }
-        
-        return request;
-    }
-    
-    static TsvRpcRequest createAdd(byte[] key, byte[] value, ExpirationTime xt) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.ADD);
+    static TsvRpcRequest createReplace(byte[] key, byte[] value, ExpirationTime xt, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.REPLACE, codec);
         request.setRpcParam(KEY, key);
         request.setRpcParam(VALUE, value);
         
@@ -236,8 +231,20 @@ class TsvRpcRequest extends Request {
         return request;
     }
     
-    static TsvRpcRequest createMatchPrefix(byte[] prefix, long max) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.MATCH_PREFIX);
+    static TsvRpcRequest createAdd(byte[] key, byte[] value, ExpirationTime xt, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.ADD, codec);
+        request.setRpcParam(KEY, key);
+        request.setRpcParam(VALUE, value);
+        
+        if (xt != null) {
+            request.setRpcParam(XT, xt.toString());
+        }
+        
+        return request;
+    }
+    
+    static TsvRpcRequest createMatchPrefix(byte[] prefix, long max, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.MATCH_PREFIX, codec);
         request.setRpcParam("prefix", prefix);
         if (max > -1) {
             request.setRpcParam("max", String.valueOf(max));
@@ -245,8 +252,8 @@ class TsvRpcRequest extends Request {
         return request;
     }
     
-    static TsvRpcRequest createMatchRegex(byte[] regex, long max) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.MATCH_REGEX);
+    static TsvRpcRequest createMatchRegex(byte[] regex, long max, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.MATCH_REGEX, codec);
         request.setRpcParam("regex", regex);
         if (max > -1) {
             request.setRpcParam("max", String.valueOf(max));
@@ -254,8 +261,8 @@ class TsvRpcRequest extends Request {
         return request;
     }
     
-    static TsvRpcRequest createPlayScript(String procedureName, Map<byte[], ?> params) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.PLAY_SCRIPT);
+    static TsvRpcRequest createPlayScript(String procedureName, Map<byte[], ?> params, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.PLAY_SCRIPT, codec);
         request.setRpcParam("name", procedureName);
         if (params != null) {
             for (Map.Entry<byte[], ?> kv : params.entrySet()) {
@@ -268,13 +275,13 @@ class TsvRpcRequest extends Request {
         return request;
     }
     
-    static TsvRpcRequest createVoid() {
-        TsvRpcRequest request = new TsvRpcRequest(Command.VOID);
+    static TsvRpcRequest createVoid(TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.VOID, codec);
         return request;
     }
 
-    static TsvRpcRequest createSynchronize(boolean hard, String command) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.SYNCHRONIZE);
+    static TsvRpcRequest createSynchronize(boolean hard, String command, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.SYNCHRONIZE, codec);
         if (hard) {
             request.setRpcParam("hard", EMPTY_VALUE);
         }
@@ -284,24 +291,24 @@ class TsvRpcRequest extends Request {
         return request;
     }
 
-    static TsvRpcRequest createVacuum(int step) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.VACUUM);
+    static TsvRpcRequest createVacuum(int step, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.VACUUM, codec);
         request.setRpcParam("step", String.valueOf(step));
         return request;
     }
 
-    static TsvRpcRequest createStatus() {
-        TsvRpcRequest request = new TsvRpcRequest(Command.STATUS);
+    static TsvRpcRequest createStatus(TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.STATUS, codec);
         return request;
     }
 
-    static TsvRpcRequest createReport() {
-        TsvRpcRequest request = new TsvRpcRequest(Command.REPORT);
+    static TsvRpcRequest createReport(TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.REPORT, codec);
         return request;
     }
 
-    static TsvRpcRequest createEcho(Map<?, ?> input) {
-        TsvRpcRequest request = new TsvRpcRequest(Command.ECHO);
+    static TsvRpcRequest createEcho(Map<?, ?> input, TsvColumnCodec codec) {
+        TsvRpcRequest request = new TsvRpcRequest(Command.ECHO, codec);
         for (Map.Entry<?, ?> entry : input.entrySet()) {
             request.setRpcParam(entry.getKey(), entry.getValue());
         }
