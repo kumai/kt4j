@@ -13,7 +13,7 @@ import kt4j.Bytes;
  * @author kumai
  *
  */
-enum TsvColumnCodec {
+public enum TsvColumnCodec {
 
     BASE_64("text/tab-separated-values; colenc=B") {
         @Override
