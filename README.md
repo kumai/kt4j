@@ -36,11 +36,7 @@ Example:
 
 ## Building
 
-KT4J uses [Ant](http://ant.apache.org) to build. The following Ant commands can be used to build:
+KT4J uses [Gradle](http://www.gradle.org) to build. KT4J includes [Gradle Wrapper](http://www.gradle.org/docs/current/userguide/gradle_wrapper.html).
 
-* ant clean - clean up
-* ant compile - compile sources
-* ant test - compile and run the unit tests
-* ant javadoc - create javadocs
-* ant jar - build the jar
-* ant dist - create the source and binary distributions
+    $ cd kt4j
+    $ ./gradlew jar

@@ -7,3 +7,5 @@
 /kt4j-*.zip
 /.idea
 /*.iml
+/.gradle
+/build
