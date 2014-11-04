@@ -5,3 +5,5 @@
 /.settings
 /kt4j-*gz
 /kt4j-*.zip
+/.idea
+/*.iml
