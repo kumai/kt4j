@@ -20,12 +20,19 @@ import kt4j.AbstractKyotoTycoonClient;
  * @author kumai
  */
 public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
+
     private String database;
-    
+    private TsvColumnCodec codec;
+
     public KyotoTycoonTsvRpcClient(String hostname, int port) {
-        super(new InetSocketAddress(hostname, port));
+        this(hostname, port, TsvColumnCodec.BASE_64);
     }
     
+    public KyotoTycoonTsvRpcClient(String hostname, int port, TsvColumnCodec codec) {
+        super(new InetSocketAddress(hostname, port));
+        this.codec = codec;
+    }
+
     /**
      * Sets the target database identifier.
      * 
@@ -38,7 +45,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
     @Override
     public void set(byte[] key, byte[] value, ExpirationTime xt)
             throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createSet(key, value, xt);
+        TsvRpcRequest request = TsvRpcRequest.createSet(key, value, xt, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -58,14 +65,14 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
     @Override
     public void setBulkString(Map<String, String> keyValuePairs, ExpirationTime xt, boolean atomic)
             throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createSetBulk(keyValuePairs, xt, atomic);
+        TsvRpcRequest request = TsvRpcRequest.createSetBulk(keyValuePairs, xt, atomic, codec);
         doSetBulk(request);
     }
 
     @Override
     public void setBulk(Map<byte[], byte[]> keyValuePairs, ExpirationTime xt, boolean atomic)
             throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createSetBulk(keyValuePairs, xt, atomic);
+        TsvRpcRequest request = TsvRpcRequest.createSetBulk(keyValuePairs, xt, atomic, codec);
         doSetBulk(request);
     }
     
@@ -88,7 +95,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
 
     @Override
     public byte[] get(byte[] key) throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createGet(key);
+        TsvRpcRequest request = TsvRpcRequest.createGet(key, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -111,7 +118,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
 
     @Override
     public byte[] seize(byte[] key) throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createSeize(key);
+        TsvRpcRequest request = TsvRpcRequest.createSeize(key, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -133,7 +140,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
 
     @Override
     public boolean remove(byte[] key) throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createRemove(key);
+        TsvRpcRequest request = TsvRpcRequest.createRemove(key, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -156,7 +163,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
     @Override
     public long increment(byte[] key, long num, long origin, ExpirationTime xt)
             throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createIncrement(key, num, origin, xt);
+        TsvRpcRequest request = TsvRpcRequest.createIncrement(key, num, origin, xt, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -197,7 +204,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
     
     private double doIncrementDouble(byte[] key, double num, Double origin, ExpirationTime xt)
             throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createIncrementDouble(key, num, origin, xt);
+        TsvRpcRequest request = TsvRpcRequest.createIncrementDouble(key, num, origin, xt, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -227,7 +234,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
     @Override
     public boolean cas(byte[] key, byte[] expect, byte[] update, ExpirationTime xt)
             throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createCas(key, expect, update, xt);
+        TsvRpcRequest request = TsvRpcRequest.createCas(key, expect, update, xt, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -249,7 +256,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
     @Override
     public boolean replace(byte[] key, byte[] value, ExpirationTime xt)
             throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createReplace(key, value, xt);
+        TsvRpcRequest request = TsvRpcRequest.createReplace(key, value, xt, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -271,7 +278,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
     @Override
     public boolean add(byte[] key, byte[] value, ExpirationTime xt)
             throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createAdd(key, value, xt);
+        TsvRpcRequest request = TsvRpcRequest.createAdd(key, value, xt, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -303,7 +310,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
     @Override
     public Map<byte[], byte[]> getBulk(List<byte[]> keys, boolean atomic)
             throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createGetBulk(keys, atomic);
+        TsvRpcRequest request = TsvRpcRequest.createGetBulk(keys, atomic, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -322,7 +329,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
     @Override
     public long removeBulk(List<byte[]> keys, boolean atomic)
             throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createRemoveBulk(keys, atomic);
+        TsvRpcRequest request = TsvRpcRequest.createRemoveBulk(keys, atomic, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -350,7 +357,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
 
     @Override
     public void clear() throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createClear();
+        TsvRpcRequest request = TsvRpcRequest.createClear(codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -365,7 +372,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
     @Override
     public List<byte[]> matchRegex(byte[] regex, long max)
             throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createMatchRegex(regex, max);
+        TsvRpcRequest request = TsvRpcRequest.createMatchRegex(regex, max, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -382,7 +389,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
     @Override
     public List<byte[]> matchPrefix(byte[] prefix, long max)
             throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createMatchPrefix(prefix, max);
+        TsvRpcRequest request = TsvRpcRequest.createMatchPrefix(prefix, max, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -399,7 +406,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
     @Override
     public Map<byte[], byte[]> playScript(String procedureName, Map<byte[], byte[]> params)
             throws KyotoTycoonOperationFailedException {
-        Operation operation = call(TsvRpcRequest.createPlayScript(procedureName, params));
+        Operation operation = call(TsvRpcRequest.createPlayScript(procedureName, params, codec));
         TsvRpcResponse response = (TsvRpcResponse) operation.getResponse();
         if (operation.isSucceeded()) {
             Map<byte[], byte[]> result = response.getBulkResult();
@@ -413,7 +420,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
 
     @Override
     public void ping() throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createVoid();
+        TsvRpcRequest request = TsvRpcRequest.createVoid(codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -427,7 +434,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
 
     @Override
     public void synchronize(boolean hard, String command) throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createSynchronize(hard, command);
+        TsvRpcRequest request = TsvRpcRequest.createSynchronize(hard, command, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -447,7 +454,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
 
     @Override
     public void vacuum(int step) throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createVacuum(step);
+        TsvRpcRequest request = TsvRpcRequest.createVacuum(step, codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -462,7 +469,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
 
     @Override
     public Map<String, String> getStatus() throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createStatus();
+        TsvRpcRequest request = TsvRpcRequest.createStatus(codec);
         if (database != null) {
             request.setDatabaseIdentifier(database);
         }
@@ -477,7 +484,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
 
     @Override
     public Map<String, String> getReport() throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createReport();
+        TsvRpcRequest request = TsvRpcRequest.createReport(codec);
         Operation operation = call(request);
         TsvRpcResponse response = (TsvRpcResponse) operation.getResponse();
         if (response == null || response.status != 200) {
@@ -490,7 +497,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
     @Override
     public Map<byte[], byte[]> echo(Map<byte[], byte[]> input)
             throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createEcho(input);
+        TsvRpcRequest request = TsvRpcRequest.createEcho(input, codec);
         Operation operation = call(request);
         TsvRpcResponse response = (TsvRpcResponse) operation.getResponse();
         if (response == null || response.status != 200) {
@@ -503,7 +510,7 @@ public class KyotoTycoonTsvRpcClient extends AbstractKyotoTycoonClient {
     @Override
     public Map<String, String> echoString(Map<String, String> input)
             throws KyotoTycoonOperationFailedException {
-        TsvRpcRequest request = TsvRpcRequest.createEcho(input);
+        TsvRpcRequest request = TsvRpcRequest.createEcho(input, codec);
         Operation operation = call(request);
         TsvRpcResponse response = (TsvRpcResponse) operation.getResponse();
         if (response == null || response.status != 200) {

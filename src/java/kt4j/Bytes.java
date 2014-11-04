@@ -73,7 +73,7 @@ public class Bytes {
      */
     public static byte[] base64Encode(byte[] bytes) {
         ChannelBuffer src = ChannelBuffers.wrappedBuffer(bytes);
-        ChannelBuffer encodedBuff = Base64.encode(src);
+        ChannelBuffer encodedBuff = Base64.encode(src, false);
         byte[] encodedBytes = new byte[encodedBuff.readableBytes()];
         encodedBuff.readBytes(encodedBytes);
         return encodedBytes;

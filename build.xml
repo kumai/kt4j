@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="kt4j" default="help" basedir=".">
 
-  <property name="version" value="0.7.0"/>
+  <property name="version" value="0.7.1"/>
 
   <property name="src.java.dir" value="src/java"/>
   <property name="src.test.dir" value="src/test"/>
