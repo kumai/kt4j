@@ -3,6 +3,8 @@ KT4J
 
 KT4J is a simple implementation of [Kyoto Tycoon](http://fallabs.com/kyototycoon/) client for Java.
 
+[![Build Status](https://travis-ci.org/kumai/kt4j.png?branch=master)](https://travis-ci.org/kumai/kt4j)
+
 ## Requirements
 
 The minimum requirements to run the application using KT4J are only three:

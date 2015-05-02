@@ -1,0 +1,25 @@
+language: java
+
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+  - openjdk7
+  - openjdk6
+
+before_script:
+  - wget http://fallabs.com/kyotocabinet/pkg/kyotocabinet-1.2.76.tar.gz
+  - tar zxf kyotocabinet-1.2.76.tar.gz
+  - cd kyotocabinet-1.2.76
+  - ./configure
+  - make
+  - sudo make install
+  - cd ../
+  - wget http://fallabs.com/kyototycoon/pkg/kyototycoon-0.9.56.tar.gz
+  - tar zxf kyototycoon-0.9.56.tar.gz
+  - cd kyototycoon-0.9.56
+  - ./configure
+  - make
+  - sudo make install
+  - sudo lab/ktservctl start
+  - cd ../
+
